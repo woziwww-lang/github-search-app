@@ -22,16 +22,33 @@ export const searchRepositories = async ({
   query,
   page,
   perPage,
+  sort = 'stars',
+  filters,
 }: SearchParams): Promise<GitHubSearchResponse> => {
   if (!query.trim()) {
     throw new GitHubAPIError('Search query cannot be empty');
   }
 
+  let searchQuery = query;
+
+  // Apply filters to the query
+  if (filters) {
+    if (filters.language) {
+      searchQuery += ` language:${filters.language}`;
+    }
+    if (filters.minStars !== undefined && filters.minStars > 0) {
+      searchQuery += ` stars:>=${filters.minStars}`;
+    }
+    if (filters.dateFrom) {
+      searchQuery += ` created:>=${filters.dateFrom}`;
+    }
+  }
+
   const url = new URL(`${GITHUB_API_BASE}/search/repositories`);
-  url.searchParams.append('q', query);
+  url.searchParams.append('q', searchQuery);
   url.searchParams.append('page', page.toString());
   url.searchParams.append('per_page', perPage.toString());
-  url.searchParams.append('sort', 'stars');
+  url.searchParams.append('sort', sort);
   url.searchParams.append('order', 'desc');
 
   try {

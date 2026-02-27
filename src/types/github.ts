@@ -22,8 +22,18 @@ export interface GitHubSearchResponse {
   items: GitHubRepo[];
 }
 
+export type SortOption = 'stars' | 'forks' | 'updated';
+
+export interface SearchFilters {
+  language?: string;
+  minStars?: number;
+  dateFrom?: string;
+}
+
 export interface SearchParams {
   query: string;
   page: number;
   perPage: number;
+  sort?: SortOption;
+  filters?: SearchFilters;
 }

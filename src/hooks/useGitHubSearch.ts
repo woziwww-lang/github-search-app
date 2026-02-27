@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { searchRepositories, GitHubAPIError } from '../api/github';
-import type { GitHubRepo } from '../types/github';
+import type { GitHubRepo, SortOption, SearchFilters } from '../types/github';
 
 interface UseGitHubSearchResult {
   repos: GitHubRepo[];
@@ -8,7 +8,7 @@ interface UseGitHubSearchResult {
   loading: boolean;
   error: string | null;
   hasSearched: boolean;
-  search: (query: string, page: number, perPage: number) => Promise<void>;
+  search: (query: string, page: number, perPage: number, sort?: SortOption, filters?: SearchFilters) => Promise<void>;
   reset: () => void;
 }
 
@@ -19,12 +19,12 @@ export const useGitHubSearch = (): UseGitHubSearchResult => {
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const search = useCallback(async (query: string, page: number, perPage: number) => {
+  const search = useCallback(async (query: string, page: number, perPage: number, sort?: SortOption, filters?: SearchFilters) => {
     setLoading(true);
     setError(null);
 
     try {
-      const data = await searchRepositories({ query, page, perPage });
+      const data = await searchRepositories({ query, page, perPage, sort, filters });
       setRepos(data.items);
       setTotalCount(data.total_count);
       setHasSearched(true);

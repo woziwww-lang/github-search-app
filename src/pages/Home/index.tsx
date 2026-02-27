@@ -2,11 +2,15 @@ import { useState } from 'react';
 import { useGitHubSearch } from '../../hooks/useGitHubSearch';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useTrending } from '../../hooks/useTrending';
+import { useSearchHistory } from '../../hooks/useSearchHistory';
+import { useTheme } from '../../hooks/useTheme';
 import { SearchBar } from '../../components/features/SearchBar';
+import { SearchFiltersComponent } from '../../components/features/SearchFilters';
 import { RepoCard } from '../../components/features/RepoCard';
 import { Pagination } from '../../components/features/Pagination';
 import { Loading } from '../../components/common/Loading';
 import { calculateTotalPages, formatNumber } from '../../utils/format';
+import type { SortOption, SearchFilters } from '../../types/github';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -16,10 +20,14 @@ export const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>('trending');
+  const [sortOption, setSortOption] = useState<SortOption>('stars');
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>({});
 
   const { repos: searchRepos, totalCount, loading: searchLoading, error: searchError, hasSearched, search } = useGitHubSearch();
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
   const { repos: trendingRepos, loading: trendingLoading, error: trendingError } = useTrending();
+  const { history, addToHistory, removeFromHistory, clearHistory } = useSearchHistory();
+  const { theme, toggleTheme } = useTheme();
 
   const totalPages = calculateTotalPages(totalCount, ITEMS_PER_PAGE);
 
@@ -27,12 +35,29 @@ export const Home = () => {
     setSearchQuery(query);
     setCurrentPage(1);
     setViewMode('search');
-    search(query, 1, ITEMS_PER_PAGE);
+    addToHistory(query);
+    search(query, 1, ITEMS_PER_PAGE, sortOption, searchFilters);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    search(searchQuery, page, ITEMS_PER_PAGE);
+    search(searchQuery, page, ITEMS_PER_PAGE, sortOption, searchFilters);
+  };
+
+  const handleFiltersChange = (filters: SearchFilters) => {
+    setSearchFilters(filters);
+    if (searchQuery && viewMode === 'search') {
+      setCurrentPage(1);
+      search(searchQuery, 1, ITEMS_PER_PAGE, sortOption, filters);
+    }
+  };
+
+  const handleSortChange = (sort: SortOption) => {
+    setSortOption(sort);
+    if (searchQuery && viewMode === 'search') {
+      setCurrentPage(1);
+      search(searchQuery, 1, ITEMS_PER_PAGE, sort, searchFilters);
+    }
   };
 
   const handleViewModeChange = (mode: ViewMode) => {
@@ -48,15 +73,39 @@ export const Home = () => {
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <header className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
-            GitHub Repository Search
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
+              GitHub Repository Search
+            </h1>
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          </div>
           <p className="text-gray-400 text-lg">
             Search millions of repositories on GitHub
           </p>
         </header>
 
-        <SearchBar onSearch={handleSearch} loading={searchLoading} />
+        <SearchBar
+          onSearch={handleSearch}
+          loading={searchLoading}
+          history={history}
+          onRemoveHistory={removeFromHistory}
+          onClearHistory={clearHistory}
+        />
+
+        {viewMode === 'search' && (
+          <SearchFiltersComponent
+            onFiltersChange={handleFiltersChange}
+            onSortChange={handleSortChange}
+            currentSort={sortOption}
+            disabled={searchLoading}
+          />
+        )}
 
         <div className="flex justify-center gap-4 mb-8">
           <button

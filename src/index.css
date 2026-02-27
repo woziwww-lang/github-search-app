@@ -4,3 +4,49 @@
   --color-primary: #667eea;
   --color-primary-dark: #764ba2;
 }
+
+body {
+  @apply bg-gray-900 text-white transition-colors duration-200;
+}
+
+body:not(.dark) {
+  @apply bg-gray-50 text-gray-900;
+}
+
+/* Light theme overrides */
+body:not(.dark) input,
+body:not(.dark) select {
+  @apply bg-white border-gray-300 text-gray-900;
+}
+
+body:not(.dark) input::placeholder {
+  @apply text-gray-400;
+}
+
+body:not(.dark) .card-bg {
+  @apply bg-white border-gray-200;
+}
+
+body:not(.dark) .text-gray-400 {
+  @apply text-gray-600;
+}
+
+body:not(.dark) .text-gray-300 {
+  @apply text-gray-700;
+}
+
+body:not(.dark) .bg-gray-800 {
+  @apply bg-white;
+}
+
+body:not(.dark) .bg-gray-700 {
+  @apply bg-gray-100;
+}
+
+body:not(.dark) .border-gray-700 {
+  @apply border-gray-300;
+}
+
+body:not(.dark) .bg-gray-800\/50 {
+  @apply bg-gray-100;
+}
