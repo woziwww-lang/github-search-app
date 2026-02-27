@@ -5,48 +5,255 @@
   --color-primary-dark: #764ba2;
 }
 
+/* Default dark theme */
 body {
   @apply bg-gray-900 text-white transition-colors duration-200;
 }
 
-body:not(.dark) {
+/* Light theme - when html does NOT have .dark class */
+html:not(.dark) body {
   @apply bg-gray-50 text-gray-900;
 }
 
-/* Light theme overrides */
-body:not(.dark) input,
-body:not(.dark) select {
+/* Light theme input overrides */
+html:not(.dark) input,
+html:not(.dark) select,
+html:not(.dark) textarea {
   @apply bg-white border-gray-300 text-gray-900;
 }
 
-body:not(.dark) input::placeholder {
-  @apply text-gray-400;
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  @apply text-gray-500;
 }
 
-body:not(.dark) .card-bg {
-  @apply bg-white border-gray-200;
+html:not(.dark) input:focus,
+html:not(.dark) select:focus,
+html:not(.dark) textarea:focus {
+  @apply border-primary ring-2 ring-primary/20;
 }
 
-body:not(.dark) .text-gray-400 {
-  @apply text-gray-600;
+/* Light theme card styles */
+html:not(.dark) .bg-gray-800\/30 {
+  @apply bg-white/80 backdrop-blur-sm;
 }
 
-body:not(.dark) .text-gray-300 {
-  @apply text-gray-700;
+html:not(.dark) .bg-gray-800\/50 {
+  @apply bg-white/90;
 }
 
-body:not(.dark) .bg-gray-800 {
+html:not(.dark) .bg-gray-800 {
   @apply bg-white;
 }
 
-body:not(.dark) .bg-gray-700 {
+html:not(.dark) .bg-gray-700\/50 {
+  @apply bg-gray-100/80;
+}
+
+html:not(.dark) .bg-gray-700 {
   @apply bg-gray-100;
 }
 
-body:not(.dark) .border-gray-700 {
+html:not(.dark) .bg-gray-900 {
+  @apply bg-gray-50;
+}
+
+/* Light theme border colors */
+html:not(.dark) .border-gray-800 {
+  @apply border-gray-200;
+}
+
+html:not(.dark) .border-gray-700 {
   @apply border-gray-300;
 }
 
-body:not(.dark) .bg-gray-800\/50 {
-  @apply bg-gray-100;
+html:not(.dark) .border-gray-700\/50 {
+  @apply border-gray-200/50;
+}
+
+/* Light theme text colors */
+html:not(.dark) .text-gray-400 {
+  @apply text-gray-600;
+}
+
+html:not(.dark) .text-gray-300 {
+  @apply text-gray-700;
+}
+
+html:not(.dark) .text-gray-500 {
+  @apply text-gray-500;
+}
+
+html:not(.dark) .text-white {
+  @apply text-gray-900;
+}
+
+/* Light theme hover states */
+html:not(.dark) .hover\:bg-gray-700\/50:hover {
+  @apply bg-gray-100/80;
+}
+
+html:not(.dark) .hover\:text-white:hover {
+  @apply text-gray-900;
+}
+
+/* Light theme for specific gradients and shadows */
+html:not(.dark) .shadow-xl {
+  @apply shadow-gray-200;
+}
+
+html:not(.dark) .shadow-2xl {
+  @apply shadow-gray-300;
+}
+
+html:not(.dark) .shadow-black\/50 {
+  @apply shadow-gray-300;
+}
+
+/* Light theme red/green colors remain the same */
+html:not(.dark) .bg-red-500\/10 {
+  @apply bg-red-50;
+}
+
+html:not(.dark) .border-red-500\/30 {
+  @apply border-red-300;
+}
+
+html:not(.dark) .text-red-400 {
+  @apply text-red-600;
+}
+
+/* Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-in-up {
+  animation: slide-in-up 0.4s ease-out;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Staggered animations for grid items */
+.stagger-item {
+  animation: fade-in 0.5s ease-out backwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.4s; }
+.stagger-item:nth-child(9) { animation-delay: 0.45s; }
+.stagger-item:nth-child(10) { animation-delay: 0.5s; }
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #667eea;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #667eea;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  /* Improve tap targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better spacing on mobile */
+  .mobile-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Ensure content is above bottom safe area */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Prevent content from being cut off at bottom */
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
+
+/* Focus visible for accessibility */
+*:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
